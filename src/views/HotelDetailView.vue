@@ -5,6 +5,7 @@ import { HOTELS } from '@/data'
 import { useAppStore } from '@/stores/appStore'
 import AppButton from '@/components/AppButton.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { navItems, useNavigation } from '@/composables/useNavigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -15,12 +16,7 @@ const hotel = computed(() => {
   return HOTELS.find(h => h.id === id) || null
 })
 
-const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-]
+const { navigateTo } = useNavigation()
 
 function goBack() {
   router.back()
@@ -35,10 +31,6 @@ function toggleFavorite() {
 function isFavorite() {
   if (!hotel.value) return false
   return store.isFavorite(hotel.value.id, 'hotel')
-}
-
-function navigateTo(path: string) {
-  router.push(path)
 }
 </script>
 

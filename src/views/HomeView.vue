@@ -1,15 +1,31 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { PLACES, WEATHER } from '@/data'
+import { ref, computed, reactive } from 'vue'
+import { useRoute } from 'vue-router'
+import { PLACES } from '@/data'
 import AppCard from '@/components/AppCard.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
 import LanguageSelector from '@/components/LanguageSelector.vue'
+import HeroBanner from '@/components/HeroBanner.vue'
 import { useAppStore } from '@/stores/appStore'
+import { translations } from '@/i18n/index'
+import { navItems, useNavigation } from '@/composables/useNavigation'
 
 const store = useAppStore()
-const router = useRouter()
 const route = useRoute()
+
+const state = reactive({
+  lang: store.language as 'en' | 'es'
+})
+
+const updateLang = () => {
+  state.lang = store.language
+}
+
+store.$subscribe(() => {
+  updateLang()
+})
+
+const t = computed(() => translations[state.lang])
 
 const searchQuery = ref('')
 
@@ -24,34 +40,19 @@ const filteredPlaces = computed(() => {
 const categories = [
   { icon: '🏞️', label: 'Lugares', path: '/places' },
   { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🛏️', label: 'Hoteles', path: '/hotels' },
   { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
   { icon: '🗺️', label: 'Clima', path: '/weather' },
-  { icon: '🎧', label: '🎧', path: '/places' },
   { icon: '🗓️', label: 'Planificador', path: '/planner' },
   { icon: '❤️', label: 'Favoritos', path: '/favorites' },
 ]
 
-const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-]
-
-function navigateTo(path: string) {
-  router.push(path)
-}
+const { navigateTo } = useNavigation()
 </script>
 
 <template>
   <div class="home-container">
     <header class="header">
-      <div class="container">
-        <h1>{{ t.home.welcome }}</h1>
-        <p>{{ t.home.location }}</p>
-        <p class="weather">{{ t.home.weather }} {{ WEATHER.temperature }}°C</p>
-      </div>
+      <HeroBanner />
       <div class="language-selector">
         <LanguageSelector />
       </div>
@@ -116,31 +117,15 @@ function navigateTo(path: string) {
 }
 
 .header {
-  background: linear-gradient(135deg, $color-jungle 0%, $color-sky 100%);
-  color: $color-white;
-  padding: 2rem 0;
   position: relative;
-}
-
-.header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
-}
-
-.header p {
-  opacity: 0.9;
-  font-size: 1rem;
-}
-
-.weather {
-  font-size: 1.25rem;
-  margin-top: 0.5rem;
+  padding: 2rem 0;
 }
 
 .language-selector {
   position: absolute;
   top: 1rem;
   right: 1rem;
+  z-index: 2;
 }
 
 .search-bar {

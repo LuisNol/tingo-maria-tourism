@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { useAppStore } from '@/stores/appStore'
+
+const store = useAppStore()
+store._initialize()
 </script>
 
 <template>

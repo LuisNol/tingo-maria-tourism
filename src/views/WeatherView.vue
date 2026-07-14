@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { WEATHER } from '@/data'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { navItems, useNavigation } from '@/composables/useNavigation'
 
-const router = useRouter()
 const route = useRoute()
 
-const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-]
-
-function navigateTo(path: string) {
-  router.push(path)
-}
+const { navigateTo } = useNavigation()
 </script>
 
 <template>

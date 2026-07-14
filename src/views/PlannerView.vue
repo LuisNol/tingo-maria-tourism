@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, unref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import AppButton from '@/components/AppButton.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
-import { useTranslation } from '@/composables/useTranslation'
+import { navItems, useNavigation } from '@/composables/useNavigation'
 
-const { t } = useTranslation()
-
-const router = useRouter()
 const route = useRoute()
 
 const selectedDays = ref<number | null>(null)
@@ -40,16 +37,7 @@ const selectedItinerary = computed(() => {
   return itineraries[selectedDays.value as keyof typeof itineraries]
 })
 
-const navItems = [
-  { icon: '🏠', label: 'Home', path: '/home' },
-  { icon: '🏞️', label: 'Places', path: '/places' },
-  { icon: '🏨', label: 'Hotels', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurants', path: '/restaurants' },
-]
-
-function navigateTo(path: string) {
-  router.push(path)
-}
+const { navigateTo } = useNavigation()
 
 function createItinerary() {
   if (selectedDays.value !== null) {

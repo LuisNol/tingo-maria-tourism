@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { PLACES } from '@/data'
 import AppButton from '@/components/AppButton.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { navItems, useNavigation } from '@/composables/useNavigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -46,16 +47,7 @@ function goBack() {
   router.back()
 }
 
-const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-]
-
-function navigateTo(path: string) {
-  router.push(path)
-}
+const { navigateTo } = useNavigation()
 </script>
 
 <template>

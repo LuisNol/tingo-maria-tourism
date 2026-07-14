@@ -4,6 +4,8 @@ import type { Language, Place, Hotel, Restaurant, FavoriteItem } from '@/types'
 const FAVORITES_KEY = 'explora_tingo_favorites'
 const LANGUAGE_KEY = 'explora_tingo_language'
 
+let _initialized = false
+
 export const useAppStore = defineStore('app', {
   state: () => ({
     language: 'es' as Language,
@@ -26,13 +28,21 @@ export const useAppStore = defineStore('app', {
     setLanguage(lang: Language) {
       this.language = lang
       localStorage.setItem(LANGUAGE_KEY, lang)
+      const event = new CustomEvent('language-changed', { detail: lang as string })
+      window.dispatchEvent(event)
     },
 
-    loadFromStorage() {
+    _initialize() {
+      if (_initialized) return
+      _initialized = true
+      
       const savedLanguage = localStorage.getItem(LANGUAGE_KEY)
       if (savedLanguage === 'en' || savedLanguage === 'es') {
         this.language = savedLanguage
       }
+
+      const event = new CustomEvent('language-changed', { detail: this.language as string })
+      window.dispatchEvent(event)
 
       const savedFavorites = localStorage.getItem(FAVORITES_KEY)
       if (savedFavorites) {

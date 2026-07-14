@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useAppStore } from '@/stores/appStore'
 import { PLACES, HOTELS, RESTAURANTS } from '@/data'
 import AppButton from '@/components/AppButton.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { navItems, useNavigation } from '@/composables/useNavigation'
 
 const store = useAppStore()
-const router = useRouter()
 const route = useRoute()
 
 const getItemType = (type: string) => {
@@ -29,33 +29,29 @@ const getItemRoute = (type: string, id: string) => {
 }
 
 const favoriteItems = computed(() => {
-  return store.favorites.map(fav => {
-    if (fav.type === 'place') {
-      return { ...PLACES.find(p => p.id === fav.id), type: 'place', id: fav.id }
-    }
-    if (fav.type === 'hotel') {
-      return { ...HOTELS.find(h => h.id === fav.id), type: 'hotel', id: fav.id }
-    }
-    if (fav.type === 'restaurant') {
-      return { ...RESTAURANTS.find(r => r.id === fav.id), type: 'restaurant', id: fav.id }
-    }
-    return null
-  }).filter(Boolean)
+  return store.favorites
+    .map(fav => {
+      if (fav.type === 'place') {
+        const place = PLACES.find(p => p.id === fav.id)
+        return place ? { ...place, type: 'place', id: fav.id } : null
+      }
+      if (fav.type === 'hotel') {
+        const hotel = HOTELS.find(h => h.id === fav.id)
+        return hotel ? { ...hotel, type: 'hotel', id: fav.id } : null
+      }
+      if (fav.type === 'restaurant') {
+        const restaurant = RESTAURANTS.find(r => r.id === fav.id)
+        return restaurant ? { ...restaurant, type: 'restaurant', id: fav.id } : null
+      }
+      return null
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null)
 })
 
-const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-]
-
-function navigateTo(path: string) {
-  router.push(path)
-}
+const { navigateTo } = useNavigation()
 
 function viewDetails(item: { type: string; id: string }) {
-  router.push(getItemRoute(item.type, item.id))
+  navigateTo(getItemRoute(item.type, item.id))
 }
 
 function removeFavorite(item: { type: string; id: string }) {

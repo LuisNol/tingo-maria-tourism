@@ -13,10 +13,12 @@
       "@/stores/*": ["src/stores/*"],
       "@/router/*": ["src/router/*"],
       "@/types/*": ["src/types/*"],
-      "@/data/*": ["src/data/*"]
+      "@/data/*": ["src/data/*"],
+      "@/i18n/*": ["src/i18n/*"],
+      "@/composables/*": ["src/composables/*"]
     },
+    "ignoreDeprecations": "6.0",
 
-    /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

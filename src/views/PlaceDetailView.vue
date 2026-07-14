@@ -5,6 +5,7 @@ import { PLACES } from '@/data'
 import { useAppStore } from '@/stores/appStore'
 import AppButton from '@/components/AppButton.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { navItems, useNavigation } from '@/composables/useNavigation'
 
 const route = useRoute()
 const router = useRouter()
@@ -15,12 +16,7 @@ const place = computed(() => {
   return PLACES.find(p => p.id === id) || null
 })
 
-const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-]
+const { navigateTo } = useNavigation()
 
 function goBack() {
   router.back()
@@ -37,15 +33,9 @@ function isFavorite() {
   return store.isFavorite(place.value.id, 'place')
 }
 
-function navigateTo(path: string) {
-  router.push(path)
-}
-
 function openAudioGuide() {
   if (place.value) {
-    router.push({
-      path: `/places/${place.value.id}/audio`
-    })
+    navigateTo(`/places/${place.value.id}/audio`)
   }
 }
 
