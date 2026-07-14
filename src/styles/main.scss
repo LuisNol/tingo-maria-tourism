@@ -1,0 +1,176 @@
+@use '/src/styles/variables.scss' as *;
+
+@function darken($color, $percent) {
+  @return mix($color, #000000, $percent);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: $color-white;
+  color: $color-dark;
+  line-height: 1.6;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--primary {
+    background-color: $color-jungle;
+    color: $color-white;
+
+    &:hover:not(:disabled) {
+      background-color: darken($color-jungle, 10%);
+    }
+  }
+
+  &--secondary {
+    background-color: $color-sky;
+    color: $color-white;
+
+    &:hover:not(:disabled) {
+      background-color: darken($color-sky, 10%);
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border: 2px solid $color-jungle;
+    color: $color-jungle;
+
+    &:hover:not(:disabled) {
+      background-color: $color-jungle;
+      color: $color-white;
+    }
+  }
+
+  &--yellow {
+    background-color: $color-sun;
+    color: $color-dark;
+
+    &:hover:not(:disabled) {
+      background-color: darken($color-sun, 10%);
+    }
+  }
+}
+
+.card {
+  background-color: $color-white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid $color-light;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: $color-white;
+  transition: border-color 0.3s ease;
+
+  &::placeholder {
+    color: $color-medium;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-jungle;
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  .stars {
+    display: flex;
+    gap: 0.125rem;
+
+    .star {
+      color: $color-sun;
+      font-size: 1rem;
+    }
+  }
+
+  .score {
+    font-weight: 600;
+    color: $color-dark;
+  }
+}
+
+.header {
+  background: linear-gradient(135deg, $color-jungle 0%, $color-sky 100%);
+  color: $color-white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    opacity: 0.9;
+  }
+}
+
+.search-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.progress-bar {
+  height: 6px;
+  background-color: $color-light;
+  border-radius: 3px;
+  overflow: hidden;
+
+  .progress {
+    height: 100%;
+    background-color: $color-jungle;
+    transition: width 0.3s ease;
+  }
+}
