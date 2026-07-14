@@ -4,11 +4,13 @@ import HomeView from '@/views/HomeView.vue'
 import PlacesView from '@/views/PlacesView.vue'
 import PlaceDetailView from '@/views/PlaceDetailView.vue'
 import HotelsView from '@/views/HotelsView.vue'
+import HotelDetailView from '@/views/HotelDetailView.vue'
 import RestaurantsView from '@/views/RestaurantsView.vue'
+import RestaurantDetailView from '@/views/RestaurantDetailView.vue'
 import PlannerView from '@/views/PlannerView.vue'
 import WeatherView from '@/views/WeatherView.vue'
-import LanguageView from '@/views/LanguageView.vue'
 import FavoritesView from '@/views/FavoritesView.vue'
+import AudioGuideView from '@/views/AudioGuideView.vue'
 
 const routes = [
   {
@@ -33,14 +35,32 @@ const routes = [
     props: true,
   },
   {
+    path: '/places/:id/audio',
+    name: 'AudioGuide',
+    component: AudioGuideView,
+    props: true,
+  },
+  {
     path: '/hotels',
     name: 'Hotels',
     component: HotelsView,
   },
   {
+    path: '/hotels/:id',
+    name: 'HotelDetail',
+    component: HotelDetailView,
+    props: true,
+  },
+  {
     path: '/restaurants',
     name: 'Restaurants',
     component: RestaurantsView,
+  },
+  {
+    path: '/restaurants/:id',
+    name: 'RestaurantDetail',
+    component: RestaurantDetailView,
+    props: true,
   },
   {
     path: '/planner',
@@ -51,11 +71,6 @@ const routes = [
     path: '/weather',
     name: 'Weather',
     component: WeatherView,
-  },
-  {
-    path: '/language',
-    name: 'Language',
-    component: LanguageView,
   },
   {
     path: '/favorites',

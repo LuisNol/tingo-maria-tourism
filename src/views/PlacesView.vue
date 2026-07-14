@@ -1,21 +1,32 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { PLACES } from '@/data'
+import AppCard from '@/components/AppCard.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { useTranslation } from '@/composables/useTranslation'
+
+const { t } = useTranslation()
 
 const router = useRouter()
 const route = useRoute()
 
-const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-]
+const searchQuery = ref('')
 
-function goToDetail(id: string) {
-  router.push(`/places/${id}`)
-}
+const filteredPlaces = computed(() => {
+  if (!searchQuery.value) return PLACES
+  return PLACES.filter(place =>
+    place.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    place.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
+const navItems = [
+  { icon: '🏠', label: t.value.navigation.home, path: '/home' },
+  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
+  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
+  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
+]
 
 function navigateTo(path: string) {
   router.push(path)
@@ -26,35 +37,31 @@ function navigateTo(path: string) {
   <div class="places-container">
     <header class="header">
       <div class="container">
-        <h1>🏞️ Lugares turísticos</h1>
+        <h1>🏞️ {{ t.places.title }}</h1>
       </div>
     </header>
 
     <main class="container">
       <div class="search-bar">
-        <input type="text" placeholder="🔍 Buscar lugar..." class="input" />
+        <input
+          type="text"
+          v-model="searchQuery"
+          :placeholder="t.places.search"
+          class="input"
+        />
       </div>
 
       <div class="item-grid">
-        <div
-          v-for="place in PLACES"
+        <AppCard
+          v-for="place in filteredPlaces"
           :key="place.id"
-          class="place-card"
-          @click="goToDetail(place.id)"
-        >
-          <img :src="place.image" :alt="place.name" class="place-image" />
-          <div class="place-info">
-            <h3 class="place-name">{{ place.name }}</h3>
-            <div class="rating">
-              <div class="stars">
-                <span v-for="i in 5" :key="i" class="star">
-                  ★
-                </span>
-              </div>
-              <span class="score">{{ place.rating }}</span>
-            </div>
-          </div>
-        </div>
+          :image="place.image"
+          :title="place.name"
+          :rating="place.rating"
+          :price="place.price"
+          type="place"
+          :id="place.id"
+        />
       </div>
     </main>
 
@@ -73,37 +80,5 @@ function navigateTo(path: string) {
   min-height: 100vh;
   background-color: $color-white;
   padding-bottom: 60px;
-}
-
-.place-card {
-  display: flex;
-  flex-direction: column;
-  background-color: $color-white;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: $transition-normal;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.place-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.place-info {
-  padding: 1rem;
-}
-
-.place-name {
-  font-size: $font-size-lg;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: $color-dark;
 }
 </style>

@@ -1,29 +1,43 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { PLACES, WEATHER } from '@/data'
 import AppCard from '@/components/AppCard.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
+import LanguageSelector from '@/components/LanguageSelector.vue'
+import { useTranslation } from '@/composables/useTranslation'
+
+const { t } = useTranslation()
 
 const router = useRouter()
 const route = useRoute()
 
+const searchQuery = ref('')
+
+const filteredPlaces = computed(() => {
+  if (!searchQuery.value) return PLACES.slice(0, 3)
+  return PLACES.filter(place =>
+    place.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    place.description.toLowerCase().includes(searchQuery.value.toLowerCase())
+  ).slice(0, 3)
+})
+
 const categories = [
-  { icon: '🏞️', label: 'Lugares turísticos', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🛏️', label: 'Hospedajes' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
-  { icon: '🗺️', label: 'Mapa' },
-  { icon: '🎧', label: 'Guía Virtual' },
-  { icon: '🗓️', label: 'Planificador', path: '/planner' },
-  { icon: '🌍', label: 'Idioma', path: '/language' },
-  { icon: '❤️', label: 'Favoritos', path: '/favorites' },
+  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
+  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
+  { icon: '🛏️', label: t.value.navigation.hotels, path: '/hotels' },
+  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
+  { icon: '🗺️', label: t.value.navigation.weather, path: '/weather' },
+  { icon: '🎧', label: '🎧', path: '/places' },
+  { icon: '🗓️', label: t.value.navigation.planner, path: '/planner' },
+  { icon: '❤️', label: t.value.navigation.favorites, path: '/favorites' },
 ]
 
 const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
+  { icon: '🏠', label: t.value.navigation.home, path: '/home' },
+  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
+  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
+  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
 ]
 
 function navigateTo(path: string) {
@@ -35,19 +49,27 @@ function navigateTo(path: string) {
   <div class="home-container">
     <header class="header">
       <div class="container">
-        <h1>👋 Bienvenido</h1>
-        <p>📍 Tingo María</p>
-        <p class="weather">🌤️ {{ WEATHER.temperature }}°C</p>
+        <h1>{{ t.home.welcome }}</h1>
+        <p>{{ t.home.location }}</p>
+        <p class="weather">{{ t.home.weather }} {{ WEATHER.temperature }}°C</p>
+      </div>
+      <div class="language-selector">
+        <LanguageSelector />
       </div>
     </header>
 
     <main class="container">
       <div class="search-bar">
-        <input type="text" placeholder="🔍 Buscar..." class="input" />
+        <input
+          type="text"
+          v-model="searchQuery"
+          :placeholder="t.home.search"
+          class="input"
+        />
       </div>
 
       <section class="categories">
-        <h2>Explorar</h2>
+        <h2>{{ t.home.explore }}</h2>
         <div class="categories-grid">
           <button
             v-for="category in categories"
@@ -62,16 +84,17 @@ function navigateTo(path: string) {
       </section>
 
       <section class="featured-places">
-        <h2>Lugares destacados</h2>
+        <h2>{{ t.home.featured }}</h2>
         <div class="item-grid">
           <AppCard
-            v-for="place in PLACES.slice(0, 3)"
+            v-for="place in filteredPlaces"
             :key="place.id"
             :image="place.image"
             :title="place.name"
             :rating="place.rating"
             :price="place.price"
             type="place"
+            :id="place.id"
           />
         </div>
       </section>
@@ -97,6 +120,7 @@ function navigateTo(path: string) {
   background: linear-gradient(135deg, $color-jungle 0%, $color-sky 100%);
   color: $color-white;
   padding: 2rem 0;
+  position: relative;
 }
 
 .header h1 {
@@ -112,6 +136,12 @@ function navigateTo(path: string) {
 .weather {
   font-size: 1.25rem;
   margin-top: 0.5rem;
+}
+
+.language-selector {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 
 .search-bar {

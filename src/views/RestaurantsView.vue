@@ -1,16 +1,32 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { RESTAURANTS } from '@/data'
+import AppCard from '@/components/AppCard.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { useTranslation } from '@/composables/useTranslation'
+
+const { t } = useTranslation()
 
 const router = useRouter()
 const route = useRoute()
 
+const searchQuery = ref('')
+
+const filteredRestaurants = computed(() => {
+  if (!searchQuery.value) return RESTAURANTS
+  return RESTAURANTS.filter(restaurant =>
+    restaurant.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    restaurant.cuisine.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    restaurant.location.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
 const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
+  { icon: '🏠', label: t.value.navigation.home, path: '/home' },
+  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
+  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
+  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
 ]
 
 function navigateTo(path: string) {
@@ -22,36 +38,30 @@ function navigateTo(path: string) {
   <div class="restaurants-container">
     <header class="header">
       <div class="container">
-        <h1>🍽️ Restaurantes</h1>
+        <h1>🍽️ {{ t.restaurants.title }}</h1>
       </div>
     </header>
 
     <main class="container">
       <div class="search-bar">
-        <input type="text" placeholder="🔍 Buscar..." class="input" />
+        <input
+          type="text"
+          v-model="searchQuery"
+          :placeholder="t.restaurants.search"
+          class="input"
+        />
       </div>
 
       <div class="item-grid">
-        <div
-          v-for="restaurant in RESTAURANTS"
+        <AppCard
+          v-for="restaurant in filteredRestaurants"
           :key="restaurant.id"
-          class="restaurant-card"
-        >
-          <img :src="restaurant.image" :alt="restaurant.name" class="restaurant-image" />
-          <div class="restaurant-info">
-            <h3 class="restaurant-name">{{ restaurant.name }}</h3>
-            <p class="restaurant-cuisine">{{ restaurant.cuisine }}</p>
-            <div class="rating">
-              <div class="stars">
-                <span v-for="i in 5" :key="i" class="star">
-                  ★
-                </span>
-              </div>
-              <span class="score">{{ restaurant.rating }}</span>
-            </div>
-            <p class="restaurant-location">{{ restaurant.location }}</p>
-          </div>
-        </div>
+          :image="restaurant.image"
+          :title="restaurant.name"
+          :rating="restaurant.rating"
+          type="restaurant"
+          :id="restaurant.id"
+        />
       </div>
     </main>
 
@@ -70,48 +80,5 @@ function navigateTo(path: string) {
   min-height: 100vh;
   background-color: $color-white;
   padding-bottom: 60px;
-}
-
-.restaurant-card {
-  display: flex;
-  flex-direction: column;
-  background-color: $color-white;
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: $transition-normal;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.restaurant-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.restaurant-info {
-  padding: 1rem;
-}
-
-.restaurant-name {
-  font-size: $font-size-lg;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: $color-dark;
-}
-
-.restaurant-cuisine {
-  font-size: $font-size-sm;
-  color: $color-medium;
-  margin-bottom: 0.5rem;
-}
-
-.restaurant-location {
-  font-size: $font-size-sm;
-  color: $color-medium;
 }
 </style>

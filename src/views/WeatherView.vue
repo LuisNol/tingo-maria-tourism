@@ -2,15 +2,18 @@
 import { useRoute, useRouter } from 'vue-router'
 import { WEATHER } from '@/data'
 import NavigationBar from '@/components/NavigationBar.vue'
+import { useTranslation } from '@/composables/useTranslation'
+
+const { t } = useTranslation()
 
 const router = useRouter()
 const route = useRoute()
 
 const navItems = [
-  { icon: '🏠', label: 'Inicio', path: '/home' },
-  { icon: '🏞️', label: 'Lugares', path: '/places' },
-  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
-  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
+  { icon: '🏠', label: t.value.navigation.home, path: '/home' },
+  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
+  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
+  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
 ]
 
 function navigateTo(path: string) {
@@ -22,7 +25,7 @@ function navigateTo(path: string) {
   <div class="weather-container">
     <header class="header">
       <div class="container">
-        <h1>🌦️ Clima</h1>
+        <h1>🌦️ {{ t.weather.title }}</h1>
       </div>
     </header>
 
@@ -41,7 +44,7 @@ function navigateTo(path: string) {
           <div class="detail-item">
             <div class="detail-icon">💧</div>
             <div class="detail-info">
-              <span class="detail-label">Humedad</span>
+              <span class="detail-label">{{ t.weather.humidity }}</span>
               <span class="detail-value">{{ WEATHER.humidity }}%</span>
             </div>
           </div>
@@ -49,7 +52,7 @@ function navigateTo(path: string) {
           <div class="detail-item">
             <div class="detail-icon">🌧️</div>
             <div class="detail-info">
-              <span class="detail-label">Lluvia</span>
+              <span class="detail-label">{{ t.weather.rain }}</span>
               <span class="detail-value">{{ WEATHER.rain }}%</span>
             </div>
           </div>
@@ -57,7 +60,7 @@ function navigateTo(path: string) {
           <div class="detail-item">
             <div class="detail-icon">☀️</div>
             <div class="detail-info">
-              <span class="detail-label">Soleado</span>
+              <span class="detail-label">{{ t.weather.sunny }}</span>
               <span class="detail-value">10 h</span>
             </div>
           </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { PLACES } from '@/data'
+import { RESTAURANTS } from '@/data'
 import { useAppStore } from '@/stores/appStore'
 import AppButton from '@/components/AppButton.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
@@ -10,9 +10,9 @@ const route = useRoute()
 const router = useRouter()
 const store = useAppStore()
 
-const place = computed(() => {
+const restaurant = computed(() => {
   const id = route.params.id as string
-  return PLACES.find(p => p.id === id) || null
+  return RESTAURANTS.find(r => r.id === id) || null
 })
 
 const navItems = [
@@ -27,57 +27,31 @@ function goBack() {
 }
 
 function toggleFavorite() {
-  if (place.value) {
-    store.toggleFavorite({ id: place.value.id, type: 'place' })
+  if (restaurant.value) {
+    store.toggleFavorite({ id: restaurant.value.id, type: 'restaurant' })
   }
 }
 
 function isFavorite() {
-  if (!place.value) return false
-  return store.isFavorite(place.value.id, 'place')
+  if (!restaurant.value) return false
+  return store.isFavorite(restaurant.value.id, 'restaurant')
 }
 
 function navigateTo(path: string) {
   router.push(path)
 }
-
-function openAudioGuide() {
-  if (place.value) {
-    router.push({
-      path: `/places/${place.value.id}/audio`
-    })
-  }
-}
-
-function openMap() {
-  if (place.value && place.value.mapUrl) {
-    window.open(place.value.mapUrl, '_blank')
-  }
-}
-
-function share() {
-  if (navigator.share && place.value) {
-    navigator.share({
-      title: place.value.name,
-      text: place.value.description,
-      url: window.location.href,
-    }).catch(() => {})
-  } else {
-    alert('Compartir no disponible en este dispositivo')
-  }
-}
 </script>
 
 <template>
-  <div v-if="place" class="detail-container">
+  <div v-if="restaurant" class="detail-container">
     <div class="detail-image">
-      <img :src="place.image" :alt="place.name" />
+      <img :src="restaurant.image" :alt="restaurant.name" />
       <button class="back-btn" @click="goBack">←</button>
     </div>
 
     <div class="container">
       <div class="detail-content">
-        <h1 class="detail-title">{{ place.name }}</h1>
+        <h1 class="detail-title">{{ restaurant.name }}</h1>
 
         <div class="rating">
           <div class="stars">
@@ -85,37 +59,37 @@ function share() {
               ★
             </span>
           </div>
-          <span class="score">{{ place.rating }}</span>
+          <span class="score">{{ restaurant.rating }}</span>
         </div>
 
-        <p class="description">{{ place.description }}</p>
+        <p class="description">{{ restaurant.description }}</p>
 
         <div class="info-grid">
           <div class="info-item">
-            <strong>Horario:</strong>
-            <p>{{ place.hours }}</p>
+            <strong>Cocina:</strong>
+            <p>{{ restaurant.cuisine }}</p>
           </div>
           <div class="info-item">
-            <strong>Precio:</strong>
-            <p>{{ place.price }}</p>
+            <strong>Ubicación:</strong>
+            <p>{{ restaurant.location }}</p>
           </div>
           <div class="info-item">
-            <strong>Cómo llegar:</strong>
-            <p>{{ place.howToReach }}</p>
+            <strong>Calificación:</strong>
+            <p>{{ restaurant.rating }} estrellas</p>
           </div>
         </div>
 
         <div class="actions">
-          <AppButton type="primary" @click="openAudioGuide">
-            🎧 Escuchar guía
+          <AppButton type="primary">
+            📞 Reservar mesa
           </AppButton>
-          <AppButton type="secondary" @click="openMap">
+          <AppButton type="secondary">
             🗺️ Ver mapa
           </AppButton>
           <AppButton type="yellow" :class="{ 'favorited': isFavorite() }" @click="toggleFavorite">
             ❤️ {{ isFavorite() ? 'Quitar de favoritos' : 'Añadir a favoritos' }}
           </AppButton>
-          <AppButton type="outline" @click="share">
+          <AppButton type="outline">
             📤 Compartir
           </AppButton>
         </div>
@@ -130,7 +104,7 @@ function share() {
   </div>
 
   <div v-else class="not-found">
-    <h2>Lugar no encontrado</h2>
+    <h2>Restaurante no encontrado</h2>
     <AppButton @click="goBack">← Volver</AppButton>
   </div>
 </template>
