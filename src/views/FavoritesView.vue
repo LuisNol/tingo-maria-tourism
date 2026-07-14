@@ -5,18 +5,16 @@ import { useAppStore } from '@/stores/appStore'
 import { PLACES, HOTELS, RESTAURANTS } from '@/data'
 import AppButton from '@/components/AppButton.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
-import { useTranslation } from '@/composables/useTranslation'
 
-const { t } = useTranslation()
 const store = useAppStore()
 const router = useRouter()
 const route = useRoute()
 
 const getItemType = (type: string) => {
   const types: Record<string, string> = {
-    place: t.value.navigation.places,
-    hotel: t.value.navigation.hotels,
-    restaurant: t.value.navigation.restaurants,
+    place: 'Lugar turístico',
+    hotel: 'Hotel',
+    restaurant: 'Restaurante',
   }
   return types[type] || ''
 }
@@ -46,10 +44,10 @@ const favoriteItems = computed(() => {
 })
 
 const navItems = [
-  { icon: '🏠', label: t.value.navigation.home, path: '/home' },
-  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
-  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
-  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
+  { icon: '🏠', label: 'Inicio', path: '/home' },
+  { icon: '🏞️', label: 'Lugares', path: '/places' },
+  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
+  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
 ]
 
 function navigateTo(path: string) {
@@ -69,15 +67,15 @@ function removeFavorite(item: { type: string; id: string }) {
   <div class="favorites-container">
     <header class="header">
       <div class="container">
-        <h1>❤️ {{ t.favorites.title }}</h1>
+        <h1>❤️ Mis favoritos</h1>
       </div>
     </header>
 
     <main class="container">
       <div v-if="favoriteItems.length === 0" class="empty-state">
         <div class="empty-icon">❤️</div>
-        <h2>{{ t.favorites.empty }}</h2>
-        <p>{{ t.favorites.emptyText }}</p>
+        <h2>Aún no tienes favoritos</h2>
+        <p>Guarda lugares, hoteles o restaurantes en tus favoritos</p>
       </div>
 
       <div v-else class="favorites-grid">
@@ -91,10 +89,10 @@ function removeFavorite(item: { type: string; id: string }) {
             <h3 class="favorite-name">{{ item.name }}</h3>
             <p class="favorite-type">{{ getItemType(item.type) }}</p>
             <AppButton type="outline" @click="viewDetails({ type: item.type, id: item.id })">
-              {{ t.favorites.viewDetails }}
+              Ver detalles
             </AppButton>
             <AppButton type="yellow" @click="removeFavorite({ type: item.type, id: item.id })">
-              ❌ {{ t.favorites.remove }}
+              ❌ Quitar de favoritos
             </AppButton>
           </div>
         </div>

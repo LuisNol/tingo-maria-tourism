@@ -4,9 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { PLACES } from '@/data'
 import AppCard from '@/components/AppCard.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
-import { useTranslation } from '@/composables/useTranslation'
-
-const { t } = useTranslation()
 
 const router = useRouter()
 const route = useRoute()
@@ -22,10 +19,10 @@ const filteredPlaces = computed(() => {
 })
 
 const navItems = [
-  { icon: '🏠', label: t.value.navigation.home, path: '/home' },
-  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
-  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
-  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
+  { icon: '🏠', label: 'Inicio', path: '/home' },
+  { icon: '🏞️', label: 'Lugares', path: '/places' },
+  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
+  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
 ]
 
 function navigateTo(path: string) {
@@ -37,7 +34,7 @@ function navigateTo(path: string) {
   <div class="places-container">
     <header class="header">
       <div class="container">
-        <h1>🏞️ {{ t.places.title }}</h1>
+        <h1>🏞️ Lugares turísticos</h1>
       </div>
     </header>
 
@@ -46,7 +43,7 @@ function navigateTo(path: string) {
         <input
           type="text"
           v-model="searchQuery"
-          :placeholder="t.places.search"
+          placeholder="🔍 Buscar lugar..."
           class="input"
         />
       </div>

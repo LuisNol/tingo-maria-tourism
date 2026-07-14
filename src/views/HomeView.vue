@@ -5,10 +5,9 @@ import { PLACES, WEATHER } from '@/data'
 import AppCard from '@/components/AppCard.vue'
 import NavigationBar from '@/components/NavigationBar.vue'
 import LanguageSelector from '@/components/LanguageSelector.vue'
-import { useTranslation } from '@/composables/useTranslation'
+import { useAppStore } from '@/stores/appStore'
 
-const { t } = useTranslation()
-
+const store = useAppStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -23,21 +22,21 @@ const filteredPlaces = computed(() => {
 })
 
 const categories = [
-  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
-  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
-  { icon: '🛏️', label: t.value.navigation.hotels, path: '/hotels' },
-  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
-  { icon: '🗺️', label: t.value.navigation.weather, path: '/weather' },
+  { icon: '🏞️', label: 'Lugares', path: '/places' },
+  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
+  { icon: '🛏️', label: 'Hoteles', path: '/hotels' },
+  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
+  { icon: '🗺️', label: 'Clima', path: '/weather' },
   { icon: '🎧', label: '🎧', path: '/places' },
-  { icon: '🗓️', label: t.value.navigation.planner, path: '/planner' },
-  { icon: '❤️', label: t.value.navigation.favorites, path: '/favorites' },
+  { icon: '🗓️', label: 'Planificador', path: '/planner' },
+  { icon: '❤️', label: 'Favoritos', path: '/favorites' },
 ]
 
 const navItems = [
-  { icon: '🏠', label: t.value.navigation.home, path: '/home' },
-  { icon: '🏞️', label: t.value.navigation.places, path: '/places' },
-  { icon: '🏨', label: t.value.navigation.hotels, path: '/hotels' },
-  { icon: '🍽️', label: t.value.navigation.restaurants, path: '/restaurants' },
+  { icon: '🏠', label: 'Inicio', path: '/home' },
+  { icon: '🏞️', label: 'Lugares', path: '/places' },
+  { icon: '🏨', label: 'Hoteles', path: '/hotels' },
+  { icon: '🍽️', label: 'Restaurantes', path: '/restaurants' },
 ]
 
 function navigateTo(path: string) {
